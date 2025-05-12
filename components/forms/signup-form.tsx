@@ -38,7 +38,7 @@ export function SignUpForm() {
 
     function onSubmit(values: z.infer<typeof SignUpSchema>) {
         axios
-            .post("http://localhost:8080/api/auth/signup", {
+            .post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`, {
                 firstName: values.firstName,
                 lastName: values.lastName,
                 email: values.email,

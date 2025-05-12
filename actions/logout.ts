@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 export async function logout() {
     const cookieStore = await cookies();
     const res = await axios.post(
-        `${process.env.BACKEND_URL}/api/auth/logout`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`,
         {},
         { withCredentials: true }
     );

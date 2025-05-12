@@ -36,7 +36,7 @@ export function LoginForm() {
     function onSubmit(values: z.infer<typeof LoginSchema>) {
         axios
             .post(
-                "http://localhost:8080/api/auth/login",
+                `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
                 {
                     email: values.email,
                     password: values.password,

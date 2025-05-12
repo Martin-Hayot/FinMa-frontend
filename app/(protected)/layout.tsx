@@ -12,9 +12,12 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const res = await axios.get("http://localhost:8080/api/auth/me", {
-                withCredentials: true,
-            });
+            const res = await axios.get(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`,
+                {
+                    withCredentials: true,
+                }
+            );
 
             console.log(res.data.user);
             if (res.status === 200) {
