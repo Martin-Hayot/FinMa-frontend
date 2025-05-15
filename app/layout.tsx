@@ -21,11 +21,11 @@ export const metadata: Metadata = {
     description: "My own financial management app",
 };
 
-export default function RootLayout({
+const RootLayout = ({
     children,
 }: Readonly<{
     children: React.ReactNode;
-}>) {
+}>) => {
     return (
         <html lang="en" suppressHydrationWarning>
             <body
@@ -42,4 +42,6 @@ export default function RootLayout({
             </body>
         </html>
     );
-}
+};
+
+export default RootLayout;
