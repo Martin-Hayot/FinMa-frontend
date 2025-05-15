@@ -46,7 +46,7 @@ export function SignUpForm() {
             })
             .then(() => {
                 toast.success("Account created successfully");
-                redirect("/login");
+                redirect("/link");
             })
             .catch((error: AxiosError) => {
                 toast.error(
