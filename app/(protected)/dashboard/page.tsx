@@ -3,7 +3,7 @@ import { DataTable } from "@/components/data-table";
 import { SectionCards } from "@/components/section-cards";
 import data from "./data.json";
 
-export default function DashboardPage() {
+const DashboardPage = () => {
     return (
         <div className="flex flex-1 flex-col">
             <div className="@container/main flex flex-1 flex-col gap-2">
@@ -17,4 +17,6 @@ export default function DashboardPage() {
             </div>
         </div>
     );
-}
+};
+
+export default DashboardPage;

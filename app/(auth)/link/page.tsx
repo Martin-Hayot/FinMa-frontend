@@ -1,10 +1,22 @@
+"use client";
+
+import PlaidLink from "@/components/plaid-link";
+import { useUserStore } from "@/store/useUser";
 import { GalleryVerticalEnd } from "lucide-react";
-import LoginImage from "@/public/login.jpg";
 import Link from "next/link";
 import Image from "next/image";
-import { SignUpForm } from "@/components/forms/signup-form";
+import LoginImage from "@/public/login.jpg";
+import { useRouter } from "next/navigation";
 
-const SignUpPage = () => {
+const LinkPage = () => {
+    const { user } = useUserStore();
+    const router = useRouter();
+
+    if (!user) {
+        router.push("/login");
+        return null;
+    }
+
     return (
         <div className="grid min-h-svh lg:grid-cols-2">
             <div className="flex flex-col gap-4 p-6 md:p-10">
@@ -21,7 +33,7 @@ const SignUpPage = () => {
                 </div>
                 <div className="flex flex-1 items-center justify-center">
                     <div className="w-full max-w-xs">
-                        <SignUpForm />
+                        <PlaidLink variant="primary" user={user} />
                     </div>
                 </div>
             </div>
@@ -39,4 +51,4 @@ const SignUpPage = () => {
     );
 };
 
-export default SignUpPage;
+export default LinkPage;

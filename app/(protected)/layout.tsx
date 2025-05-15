@@ -1,42 +1,17 @@
 "use client";
 
-import { AppSidebar } from "@/components/app-sidebar";
-import { SiteHeader } from "@/components/site-header";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useUserStore } from "@/store/useUser";
-import axios from "axios";
 import { useEffect } from "react";
 
-const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-    const setUser = useUserStore((state) => state.setUser);
-
+const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
+    const { currentUser } = useUserStore();
     useEffect(() => {
-        const fetchUser = async () => {
-            const res = await axios.get(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`,
-                {
-                    withCredentials: true,
-                }
-            );
-
-            console.log(res.data.user);
-            if (res.status === 200) {
-                setUser(res.data.user);
-            }
+        const fetchCurrentUser = async () => {
+            await currentUser();
         };
-
-        fetchUser();
-    }, [setUser]);
-
-    return (
-        <SidebarProvider>
-            <AppSidebar variant="sidebar" />
-            <SidebarInset>
-                <SiteHeader />
-                {children}
-            </SidebarInset>
-        </SidebarProvider>
-    );
+        fetchCurrentUser();
+    }, [currentUser]);
+    return <div>{children}</div>;
 };
 
-export default DashboardLayout;
+export default ProtectedLayout;
