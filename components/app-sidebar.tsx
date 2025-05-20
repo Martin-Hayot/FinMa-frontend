@@ -27,6 +27,7 @@ import {
 import { GalleryVerticalEnd, LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { useUserStore } from "@/store/useUser";
+import { Skeleton } from "./ui/skeleton";
 
 const navigation = {
     navMain: [
@@ -121,13 +122,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 />
             </SidebarContent>
             <SidebarFooter>
-                <NavUser
-                    user={{
-                        name: user?.firstName + " " + user?.lastName,
-                        email: user?.email || "",
-                        avatar: user?.avatar || "",
-                    }}
-                />
+                {user ? (
+                    <NavUser
+                        user={{
+                            name: user?.firstName + " " + user?.lastName,
+                            email: user?.email || "",
+                            avatar: user?.avatar || "",
+                        }}
+                    />
+                ) : (
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton
+                                asChild
+                                size="lg"
+                                className="data-[slot=sidebar-menu-button]:!p-1.5"
+                            >
+                                <Skeleton className="w-full h-fullrounded-lg" />
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                )}
             </SidebarFooter>
         </Sidebar>
     );

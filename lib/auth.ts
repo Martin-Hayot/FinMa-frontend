@@ -18,7 +18,7 @@ export async function currentUser(): Promise<User | null> {
     try {
         // Verify token with your backend
         const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`,
+            `${process.env.NEXT_PUBLIC_API_URL}/api/me`,
             {},
             {
                 withCredentials: true,

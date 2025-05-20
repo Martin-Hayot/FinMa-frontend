@@ -14,14 +14,14 @@ export const useUserStore = create<UserStore>((set) => ({
     user: null,
     currentUser: async () => {
         const res = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`,
+            `${process.env.NEXT_PUBLIC_API_URL}/api/me`,
             {
                 withCredentials: true,
             }
         );
 
         if (res.status === 200) {
-            set({ user: res.data.user });
+            set({ user: res.data });
         } else {
             set({ user: null });
         }
