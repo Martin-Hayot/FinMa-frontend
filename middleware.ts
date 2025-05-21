@@ -1,34 +1,38 @@
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
-// Define your protected routes configuration
-const protectedRoutes = [
-    "/dashboard",
-    "/profile",
-    "/settings",
-    "/link",
-    // Add other protected routes
-];
+// Define your protected routes configuration with role requirements
+const routeConfig = {
+    "/dashboard": { requiredRole: "user" },
+    "/profile": { requiredRole: "user" },
+    "/settings": { requiredRole: "user" },
+    "/link": { requiredRole: "user" },
+    "/admin": { requiredRole: "admin" },
+    // Add other routes with their required roles
+};
 
-const adminRoutes = [
-    "/admin",
-    // Add admin-only routes
-];
+// Simple cache implementation
+interface CacheEntry {
+    role: string;
+    expiry: number; // Timestamp when this entry expires
+}
+
+// Cache object - stored in memory
+const tokenCache: Record<string, CacheEntry> = {};
+
+// Cache TTL in seconds (1 minute)
+const CACHE_TTL = 60;
 
 export default async function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl;
 
-    // Check if this is a protected route
-    const isProtectedRoute = protectedRoutes.some((route) =>
+    // Find matching route configuration
+    const matchingRoute = Object.keys(routeConfig).find((route) =>
         pathname.startsWith(route)
-    );
+    ) as keyof typeof routeConfig | undefined;
 
-    const isAdminRoute = adminRoutes.some((route) =>
-        pathname.startsWith(route)
-    );
-
-    // If it's not a protected route, don't do anything
-    if (!isProtectedRoute && !isAdminRoute) {
+    // If no matching route config, proceed normally
+    if (!matchingRoute) {
         return NextResponse.next();
     }
 
@@ -36,11 +40,30 @@ export default async function middleware(req: NextRequest) {
 
     // If the token is not present, redirect to login
     if (!token) {
-        const loginUrl = `${req.nextUrl.origin}/login`;
-        return NextResponse.redirect(loginUrl);
+        return NextResponse.redirect(
+            `${req.nextUrl.origin}/login?redirect=${encodeURIComponent(
+                pathname
+            )}`
+        );
     }
 
-    // Verify the token with your backend
+    // Check if we have a valid cached role for this token
+    const now = Math.floor(Date.now() / 1000);
+    const cachedEntry = tokenCache[token];
+
+    if (cachedEntry && cachedEntry.expiry > now) {
+        // Cache hit - use the cached role
+        const userRole = cachedEntry.role;
+        const { requiredRole } = routeConfig[matchingRoute];
+
+        if (requiredRole === "admin" && userRole !== "admin") {
+            return NextResponse.redirect(`${req.nextUrl.origin}/access-denied`);
+        }
+
+        return NextResponse.next();
+    }
+
+    // Cache miss or expired - verify the token with your backend
     try {
         const response = await axios.get(
             `${process.env.NEXT_PUBLIC_API_URL}/api/me`,
@@ -52,11 +75,23 @@ export default async function middleware(req: NextRequest) {
             }
         );
 
-        if (response.status !== 200) {
-            const loginUrl = `${req.nextUrl.origin}/login`;
-            return NextResponse.redirect(loginUrl);
+        // Store result in cache
+        const userRole = response.data.role || "user";
+        tokenCache[token] = {
+            role: userRole,
+            expiry: now + CACHE_TTL,
+        };
+
+        // Ensure user has required role for this route
+        const { requiredRole } = routeConfig[matchingRoute];
+
+        if (requiredRole === "admin" && userRole !== "admin") {
+            // Redirect unauthorized users to an access denied page
+            return NextResponse.redirect(`${req.nextUrl.origin}/access-denied`);
         }
-    } catch (error: unknown) {
+
+        return NextResponse.next();
+    } catch (error) {
         // Type guard to check if error is an AxiosError
         if (axios.isAxiosError(error)) {
             console.error("Error verifying token:", error.message);
@@ -84,14 +119,15 @@ export default async function middleware(req: NextRequest) {
             console.error("Unknown error:", error);
         }
 
-        const loginUrl = `${req.nextUrl.origin}/login`;
-        return NextResponse.redirect(loginUrl);
+        return NextResponse.redirect(
+            `${req.nextUrl.origin}/login?redirect=${encodeURIComponent(
+                pathname
+            )}`
+        );
     }
-
-    return NextResponse.next();
 }
 
 // Routes Middleware should not run on
 export const config = {
-    matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+    matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$).*)"],
 };

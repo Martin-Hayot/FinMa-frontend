@@ -40,29 +40,29 @@ const navigation = {
     navSecondary: [
         {
             title: "Settings",
-            url: "/settings",
+            url: "/dashboard/settings",
             icon: IconSettings,
         },
         {
             title: "Search",
-            url: "#",
+            url: "/dashboard/search",
             icon: IconSearch,
         },
     ],
     documents: [
         {
             name: "Data Library",
-            url: "#",
+            url: "/dashboard/documents/data-library",
             icon: IconDatabase,
         },
         {
             name: "Reports",
-            url: "#",
+            url: "/dashboard/documents/reports",
             icon: IconReport,
         },
         {
             name: "Word Assistant",
-            url: "#",
+            url: "/dashboard/documents/word-assistant",
             icon: IconFileWord,
         },
     ],

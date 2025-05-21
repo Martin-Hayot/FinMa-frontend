@@ -25,3 +25,15 @@ export const LoginSchema = z.object({
         .email({ message: "Invalid email" }),
     password: z.string().min(1, { message: "Password is required" }),
 });
+
+export const AccountFormSchema = z.object({
+    firstName: z.string().min(2, {
+        message: "First name must be at least 2 characters.",
+    }),
+    lastName: z.string().min(2, {
+        message: "Last name must be at least 2 characters.",
+    }),
+    email: z.string().min(2, {
+        message: "Email must be at least 2 characters.",
+    }),
+});

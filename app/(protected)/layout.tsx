@@ -1,17 +1,9 @@
 "use client";
 
-import { useUserStore } from "@/store/useUser";
-import { useEffect } from "react";
+import { AuthProvider } from "@/components/providers/auth-provider";
 
 const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
-    const { currentUser } = useUserStore();
-    useEffect(() => {
-        const fetchCurrentUser = async () => {
-            await currentUser();
-        };
-        fetchCurrentUser();
-    }, [currentUser]);
-    return <div>{children}</div>;
+    return <AuthProvider>{children}</AuthProvider>;
 };
 
 export default ProtectedLayout;
