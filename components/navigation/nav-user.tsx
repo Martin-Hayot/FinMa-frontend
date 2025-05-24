@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/sidebar";
 import { logout } from "@/actions/logout";
 import { useUserStore } from "@/store/useUser";
+import Link from "next/link";
 
 export function NavUser({
     user,
@@ -96,14 +97,21 @@ export function NavUser({
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <UserCircleIcon />
-                                Account
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <BellIcon />
-                                Notifications
-                            </DropdownMenuItem>
+                            <Link href="/dashboard/settings" passHref>
+                                <DropdownMenuItem>
+                                    <UserCircleIcon />
+                                    Account
+                                </DropdownMenuItem>
+                            </Link>
+                            <Link
+                                href="/dashboard/settings/notifications"
+                                passHref
+                            >
+                                <DropdownMenuItem>
+                                    <BellIcon />
+                                    Notifications
+                                </DropdownMenuItem>
+                            </Link>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
