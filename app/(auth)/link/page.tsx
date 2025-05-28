@@ -1,22 +1,11 @@
-"use client";
-
-import PlaidLink from "@/components/plaid-link";
-import { useUserStore } from "@/store/useUser";
 import { GalleryVerticalEnd } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import LoginImage from "@/public/login.jpg";
-import { useRouter } from "next/navigation";
+import BankSelection from "@/components/bank-selection";
+import CountrySelection from "@/components/country-selection";
 
 const LinkPage = () => {
-    const { user } = useUserStore();
-    const router = useRouter();
-
-    if (!user) {
-        router.push("/login");
-        return null;
-    }
-
     return (
         <div className="grid min-h-svh lg:grid-cols-2">
             <div className="flex flex-col gap-4 p-6 md:p-10">
@@ -32,8 +21,9 @@ const LinkPage = () => {
                     </Link>
                 </div>
                 <div className="flex flex-1 items-center justify-center">
-                    <div className="w-full max-w-xs">
-                        <PlaidLink variant="primary" user={user} />
+                    <div className="w-full max-w-md space-y-6">
+                        <CountrySelection />
+                        <BankSelection />
                     </div>
                 </div>
             </div>
