@@ -28,6 +28,7 @@ import { GalleryVerticalEnd, LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { useUserStore } from "@/store/useUser";
 import { Skeleton } from "./ui/skeleton";
+import { useAccountStore } from "@/store/useAccount";
 
 const navigation = {
     navMain: [
@@ -70,6 +71,7 @@ const navigation = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { user } = useUserStore();
+    const { accounts } = useAccountStore();
     return (
         <Sidebar collapsible="offcanvas" {...props}>
             <SidebarHeader>
@@ -101,6 +103,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         }[]
                     }
                 />
+                {accounts && accounts.length > 0 ? (
+                    <div>
+                        {accounts.map((account) => (
+                            <div
+                                className="py-4 px-4 transition-colors"
+                                key={account.AccountId}
+                            >
+                                <h3 className="text-md font-semibold">
+                                    {account.name} ({account.type})
+                                </h3>
+                                <p className="text-xs text-white/50">
+                                    IBAN: {account.iban}
+                                </p>
+                                <p className="text-base text-white">
+                                    {account.balance} {account.currency}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p>No accounts available</p>
+                )}
                 {/* <NavDocuments
                     items={
                         data.documents as unknown as {

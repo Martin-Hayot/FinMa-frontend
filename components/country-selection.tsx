@@ -11,11 +11,15 @@ const countries = [
 
 const CountrySelection = () => {
     const [selectedCountry, setSelectedCountry] = useState("");
-    const { setCountryCode } = useLinkStore();
+    const { selectCountryAndFetchInstitutions, isLoadingInstitutions, error } =
+        useLinkStore();
+
+    const handleCountrySelect = async (countryCode: string) => {
+        await selectCountryAndFetchInstitutions(countryCode);
+    };
 
     return (
         <div>
-            <h2>Select your country</h2>
             <div className="my-4">
                 <Input
                     type="text"
@@ -23,6 +27,7 @@ const CountrySelection = () => {
                     onChange={(e) => setSelectedCountry(e.target.value)}
                 />
             </div>
+            {error && <div className="text-red-500 mb-2">{error}</div>}
             {countries
                 .filter((country) =>
                     country.name
@@ -34,9 +39,8 @@ const CountrySelection = () => {
                         key={country.code}
                         variant={"outline"}
                         className="flex items-center mb-2 h-16 justify-start px-4"
-                        onClick={() => {
-                            setCountryCode(country.code);
-                        }}
+                        onClick={() => handleCountrySelect(country.code)}
+                        disabled={isLoadingInstitutions}
                     >
                         <Image
                             src={country.logo}
@@ -45,7 +49,10 @@ const CountrySelection = () => {
                             height={50}
                             className="w-8 h-6 mr-2"
                         />
-                        <span className="text-md">{country.name}</span>
+                        <span className="text-md">
+                            {country.name}
+                            {isLoadingInstitutions && " (Loading...)"}
+                        </span>
                     </Button>
                 ))}
         </div>

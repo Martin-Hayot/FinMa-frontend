@@ -2,8 +2,7 @@ import { GalleryVerticalEnd } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import LoginImage from "@/public/login.jpg";
-import BankSelection from "@/components/bank-selection";
-import CountrySelection from "@/components/country-selection";
+import BankConnect from "@/components/bank-connect";
 
 const LinkPage = () => {
     return (
@@ -22,8 +21,7 @@ const LinkPage = () => {
                 </div>
                 <div className="flex flex-1 items-center justify-center">
                     <div className="w-full max-w-md space-y-6">
-                        <CountrySelection />
-                        <BankSelection />
+                        <BankConnect />
                     </div>
                 </div>
             </div>
