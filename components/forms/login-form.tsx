@@ -47,7 +47,7 @@ export function LoginForm() {
             )
             .then(() => {
                 toast.success("Logged in successfully");
-                router.push("/link");
+                router.push("/dashboard");
             })
             .catch((error: AxiosError) => {
                 toast.error(

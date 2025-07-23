@@ -1,7 +1,8 @@
 "use client";
 
 import { useUserStore } from "@/store/useUser";
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, ReactNode } from "react";
+import { useCurrentUser } from "@/queries/user";
 
 // Define the AuthContext type
 type AuthContextType = {
@@ -13,20 +14,8 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const { user, currentUser } = useUserStore();
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                await currentUser();
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        checkAuth();
-    }, [currentUser]);
+    const { user } = useUserStore();
+    const { isLoading } = useCurrentUser();
 
     const checkPermission = (requiredRole: string) => {
         if (!user) return false;

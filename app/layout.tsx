@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { AuthProvider } from "@/components/providers/auth-provider";
+import { QueryProvider } from "@/components/providers/query-provider";
 import { Toaster } from "@/components/ui/sonner";
 
 // import Navigation from "@/components/navigation/navigation";
@@ -36,8 +38,12 @@ const RootLayout = ({
                     defaultTheme="dark"
                     disableTransitionOnChange
                 >
-                    {children}
-                    <Toaster />
+                    <QueryProvider>
+                        <AuthProvider>
+                            {children}
+                            <Toaster />
+                        </AuthProvider>
+                    </QueryProvider>
                 </ThemeProvider>
             </body>
         </html>

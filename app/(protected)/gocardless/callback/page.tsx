@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
-import { useAccountStore } from "@/store/useAccount";
 
 const GoCardlessCallbackPage = () => {
     const [loading, setLoading] = useState(true);
@@ -11,7 +10,6 @@ const GoCardlessCallbackPage = () => {
     const [isLinked, setIsLinked] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { setAccounts } = useAccountStore();
 
     const ref = searchParams.get("ref");
 
@@ -57,71 +55,6 @@ const GoCardlessCallbackPage = () => {
 
         updateRequisition();
     }, [ref, isLinked]);
-
-    useEffect(() => {
-        const retrieveAccounts = async () => {
-            if (!isLinked) {
-                console.log("Not linked, skipping account retrieval");
-                setLoading(false);
-                return;
-            }
-            axios
-                .get(`${process.env.NEXT_PUBLIC_API_URL}/api/accounts`, {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    withCredentials: true,
-                })
-                .then((response) => {
-                    if (response.status !== 200) {
-                        throw new Error(
-                            `Failed to retrieve accounts: ${response.statusText}`
-                        );
-                    }
-                    // Map the response data to the expected account structure
-                    type AccountResponse = {
-                        account_id: string;
-                        type: string;
-                        name: string;
-                        currency: string;
-                        balance_available: number;
-                        balance_current: number;
-                        institution_name: string;
-                        iban: string;
-                        created_at: string;
-                        updated_at: string;
-                    };
-                    const accounts = response.data.map(
-                        (account: AccountResponse) => ({
-                            AccountId: account.account_id,
-                            type: account.type,
-                            name: account.name,
-                            currency: account.currency,
-                            balance: account.balance_available,
-                            iban: account.iban,
-                        })
-                    );
-
-                    // Set the accounts in the store
-                    setAccounts(accounts);
-                    // Redirect to accounts page or dashboard after successful retrieval
-                    router.push("/dashboard");
-                })
-                .catch((err) => {
-                    console.error("Error retrieving accounts:", err);
-                    setError(
-                        err instanceof Error
-                            ? err.message
-                            : "Failed to retrieve accounts"
-                    );
-                })
-                .finally(() => {
-                    setLoading(false);
-                });
-        };
-
-        retrieveAccounts();
-    }, [isLinked, setAccounts, router]);
 
     if (loading) {
         return (

@@ -1,12 +1,16 @@
 import { create } from "zustand";
 
 export interface Account {
-    AccountId: string;
+    account_id: string;
     type: string;
     name: string;
     currency: string;
-    balance: number;
+    balance_available: number;
+    balance_current: number;
+    institution_name: string;
     iban: string;
+    created_at: string;
+    updated_at: string;
 }
 
 interface AccountStore {
@@ -15,7 +19,6 @@ interface AccountStore {
     AddAccount: (account: Account) => void;
     clearAccounts: () => void;
     currentAccount: Account | null;
-    updateAccount: (account: Partial<Account>) => void;
 }
 
 export const useAccountStore = create<AccountStore>((set) => ({
@@ -27,14 +30,4 @@ export const useAccountStore = create<AccountStore>((set) => ({
         })),
     clearAccounts: () => set({ accounts: null }),
     currentAccount: null,
-    updateAccount: (account) =>
-        set((state) => ({
-            accounts: state.accounts
-                ? state.accounts.map((acc) =>
-                      acc.AccountId === account.AccountId
-                          ? { ...acc, ...account }
-                          : acc
-                  )
-                : null,
-        })),
 }));
