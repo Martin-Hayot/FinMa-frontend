@@ -29,6 +29,7 @@ import Link from "next/link";
 import { useUserStore } from "@/store/useUser";
 import { Skeleton } from "./ui/skeleton";
 import { useAccountStore } from "@/store/useAccount";
+import { Button } from "@/components/ui/button";
 
 const navigation = {
     navMain: [
@@ -107,7 +108,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <div>
                         {accounts.map((account) => (
                             <div
-                                className="py-4 px-4 transition-colors"
+                                className="p-4 transition-colors"
                                 key={account.AccountId}
                             >
                                 <h3 className="text-md font-semibold">
@@ -123,7 +124,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         ))}
                     </div>
                 ) : (
-                    <p>No accounts available</p>
+                    <div className="p-4 text-center">
+                        <Button
+                            variant={"outline"}
+                            className="mt-2 w-full"
+                            asChild
+                        >
+                            <Link href="/link">Connect Bank Account</Link>
+                        </Button>
+                        <p className="mt-2">No accounts available</p>
+                    </div>
                 )}
                 {/* <NavDocuments
                     items={
