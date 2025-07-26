@@ -15,7 +15,7 @@ import {
 } from "@tabler/icons-react";
 
 // import { NavDocuments } from "@/components/navigation/nav-documents";
-// import { NavMain } from "@/components/navigation/nav-main";
+import { NavMain } from "@/components/navigation/nav-main";
 import { NavSecondary } from "@/components/navigation/nav-secondary";
 import { NavUser } from "@/components/navigation/nav-user";
 import {
@@ -107,7 +107,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
-                {/* <NavMain
+                <NavMain
                     items={
                         navigation.navMain as unknown as {
                             title: string;
@@ -115,7 +115,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             icon?: LucideIcon | undefined;
                         }[]
                     }
-                /> */}
+                />
 
                 {/* Accounts Section */}
                 <div className="px-2 py-4">
@@ -190,6 +190,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                     className="h-auto p-3 hover:bg-accent/80 justify-start text-left w-full"
                                     variant="ghost"
                                     key={account.account_id}
+                                    onClick={() =>
+                                        router.push(
+                                            `/dashboard/accounts/${account.account_id}`
+                                        )
+                                    }
                                 >
                                     <div className="flex items-center gap-2 w-full">
                                         <div className="flex-shrink-0">

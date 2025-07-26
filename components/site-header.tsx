@@ -8,6 +8,16 @@ export function SiteHeader() {
     let pathname = usePathname();
 
     pathname = pathname.split("/").filter(Boolean).at(-1) || "Dashboard";
+
+    // if pathname is a uuid (e.g., account ID), replace it with "Account"
+    if (
+        pathname.match(
+            /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+        )
+    ) {
+        pathname = "Account";
+    }
+
     pathname = pathname[0].toUpperCase() + pathname.slice(1); // capitalize first letter
     pathname = pathname.replaceAll("-", " "); // replace all dashes with spaces
 
